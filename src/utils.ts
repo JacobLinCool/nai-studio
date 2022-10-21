@@ -56,3 +56,26 @@ export function get_package_version(): string {
     );
     return pkg.version;
 }
+
+export function sort_traits(
+    traits: string[],
+    groups = [["ear"], ["hair"], ["eye"], ["background"], ["from"]],
+): void {
+    for (const group of groups) {
+        traits.sort((a, b) => {
+            const lower_a = a.toLowerCase();
+            const lower_b = b.toLowerCase();
+            const a_in_group = group.some((word) => lower_a.includes(word));
+            const b_in_group = group.some((word) => lower_b.includes(word));
+
+            if (a_in_group && !b_in_group) {
+                return 1;
+            }
+            if (b_in_group && !a_in_group) {
+                return -1;
+            }
+
+            return 0;
+        });
+    }
+}

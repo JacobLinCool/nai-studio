@@ -42,6 +42,7 @@ export class NovelAI {
         const context = await browser.newContext();
         const page = await context.newPage();
         await page.goto("https://novelai.net/login");
+        await page.waitForLoadState("networkidle");
 
         const token = new Promise<string>((resolve) => {
             context.addListener("response", async (res) => {
