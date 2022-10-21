@@ -44,10 +44,12 @@ export class NovelAI {
         await page.goto("https://novelai.net/login");
         await page.waitForLoadState("networkidle");
 
+        let ok = false;
         const token = new Promise<string>((resolve) => {
             context.addListener("response", async (res) => {
                 if (res.url().includes("/user/login") && res.request().method() === "POST") {
                     const { accessToken } = await res.json();
+                    ok = true;
                     resolve(accessToken);
                 }
             });
@@ -57,7 +59,14 @@ export class NovelAI {
         await page.fill("input#password", password);
         await page.click("input[type='submit']");
 
-        this.token = await token;
+        const timeout = new Promise<string>((_, reject) => {
+            setTimeout(() => {
+                if (!ok) {
+                    reject("Login timed out");
+                }
+            }, 10_000);
+        });
+        this.token = await Promise.race([token, timeout]);
         await browser.close();
         this.debugger.namespace = `novel-ai:${jwt_data(this.token).id}`;
         this.debugger("logged in");
