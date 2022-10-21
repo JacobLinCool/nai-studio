@@ -1,0 +1,11 @@
+{
+    "name": "Class Room",
+    "description": "High School Class Room.",
+    "traits": [
+        "classroom",
+        "high school",
+        "black board",
+        "wooden tables",
+        "wooden chairs"
+    ]
+}
