@@ -66,12 +66,18 @@ export class NovelAI {
                 }
             }, 10_000);
         });
-        this.token = await Promise.race([token, timeout]);
-        await browser.close();
-        this.debugger.namespace = `novel-ai:${jwt_data(this.token).id}`;
-        this.debugger("logged in");
 
-        return this.token;
+        try {
+            this.token = await Promise.race([token, timeout]);
+            await browser.close();
+            this.debugger.namespace = `novel-ai:${jwt_data(this.token).id}`;
+            this.debugger("logged in");
+
+            return this.token;
+        } catch (err) {
+            await browser.close();
+            throw err;
+        }
     }
 
     public check(do_check: boolean): this {
