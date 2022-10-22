@@ -1,6 +1,6 @@
 {
     "name": "nai-studio",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "NovelAI Library and Command Line Interface.",
     "keywords": [
         "NovelAI"
