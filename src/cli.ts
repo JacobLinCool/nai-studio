@@ -7,6 +7,7 @@ import char from "@/commands/char";
 import scene from "@/commands/scene";
 import bit from "@/commands/bit";
 import shoot from "@/commands/shoot";
+import whoami from "@/commands/whoami";
 
 program
     .name("nai-studio")
@@ -17,4 +18,5 @@ program
     .addCommand(scene)
     .addCommand(bit)
     .addCommand(shoot)
+    .addCommand(whoami)
     .parse();

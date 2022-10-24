@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import debug from "debug";
 import { jwt_data, find_chrome } from "./utils";
 import { sampler as SAMPLER, model as MODEL } from "./constants";
+import { AccessToken } from "./types";
 
 export class NovelAI {
     public token?: string;
@@ -18,18 +19,9 @@ export class NovelAI {
 
     public async login(username: string, password: string): Promise<string> {
         if (this.token) {
-            this.debugger("checking token");
-            const res = await fetch("https://api.novelai.net/user/subscription", {
-                headers: {
-                    authorization: `Bearer ${this.token}`,
-                    "content-type": "application/json; charset=utf-8",
-                },
-            });
+            const result = await this.whoami();
 
-            const result = await res.json();
-            this.debugger(result);
-
-            if (result?.perks?.imageGeneration) {
+            if (result.perks.imageGeneration) {
                 this.debugger("token still works");
                 return this.token;
             } else {
@@ -78,6 +70,21 @@ export class NovelAI {
             await browser.close();
             throw err;
         }
+    }
+
+    public async whoami(): Promise<AccessToken> {
+        this.debugger("checking token");
+        const res = await fetch("https://api.novelai.net/user/subscription", {
+            headers: {
+                authorization: `Bearer ${this.token}`,
+                "content-type": "application/json; charset=utf-8",
+            },
+        });
+
+        const result = await res.json();
+        this.debugger(result);
+
+        return result;
     }
 
     public check(do_check: boolean): this {
